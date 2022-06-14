@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "489800753950",
+    "project_id": "edriver-cc4a6",
+    "storage_bucket": "edriver-cc4a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489800753950:android:6dc52f24de40d5bde05f0f",
+        "android_client_info": {
+          "package_name": "com.example.edriver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489800753950-a2k03r4teec90uvol77b21gik82vgg4v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD52KWf5I9H04hnEnUQHTA_ytxNA_F_7S0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489800753950-a2k03r4teec90uvol77b21gik82vgg4v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
