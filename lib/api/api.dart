@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_style.dart';
 
 class API {
-  String urlPrefix = "http://10.0.2.2/ecar/driver_api";
+  String urlPrefix = "https://ecar.egat.co.th/driver_api";
   final prefs = SharedPreferences.getInstance();
 
   Future<dynamic> callApi(String urlPostfix, Map param) async {
