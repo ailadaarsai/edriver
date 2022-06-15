@@ -12,7 +12,7 @@ class jobRemainScreen extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.all(10),
-          color: Colors.pink[200],
+          color: Colors.pink[100],
           child: Column(
             children: [
               AppStyle().space_box(10),

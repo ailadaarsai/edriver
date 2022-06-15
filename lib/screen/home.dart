@@ -57,8 +57,8 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: const TabBar(
               // ส่วนของ tab
               tabs: [
-                Tab(icon: Icon(Icons.alarm), text: 'งานวันนี้'),
                 Tab(icon: Icon(Icons.feed), text: 'งานใหม่'),
+                Tab(icon: Icon(Icons.alarm), text: 'งานวันนี้'),
                 Tab(icon: Icon(Icons.thumb_down), text: 'งานคงค้าง'),
               ],
             ),
@@ -68,8 +68,9 @@ class _HomeScreenState extends State<HomeScreen> {
           body: TabBarView(
             children: <Widget>[
               // Text(driverID),
-              jobTodayScreen(),
               jobNewScreen(),
+              jobTodayScreen(),
+
               jobRemainScreen(),
             ],
           ),

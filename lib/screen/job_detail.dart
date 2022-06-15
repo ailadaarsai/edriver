@@ -34,7 +34,7 @@ class _jobDetailScreen extends State<jobDetailScreen> {
                 Tab(icon: Icon(Icons.summarize), text: 'สรุปข้อมูล'),
               ],
             ),
-            title: Text('ใบงานเลขที่ 650121-0001-J001'),
+            title: Text('Job#  650121-0001-J001'),
             actions: <Widget>[AppStyle().form_notify(context)],
           ),
           body: TabBarView(

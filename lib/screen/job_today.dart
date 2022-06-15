@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 
 class jobTodayScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -15,13 +14,14 @@ class jobTodayScreen extends StatelessWidget {
       children: <Widget>[
         Container(
           margin: EdgeInsets.all(10),
-          color: Colors.yellow[200],
+          color: Colors.lightBlue[100],
           child: Column(
             children: [
               AppStyle().space_box(10),
               row_detail("Job #", "650121-0001-J001"),
               row_detail("วันที่", " 22 - 25 ม.ค. 65 (4 วัน)"),
-              row_detail("เวลา", " 10:00 น.  สถานที่  ท.103"),
+              row_detail("เวลานัดหมาย", " 10:00 น."),
+              row_detail("สถานที่นัดหมาย", " สถานที่  ท.103"),
               row_detail("จุดหมาย", " เขื่อนศรีฯ จ.กาญจนบุรี"),
               row_detail("ผู้โดยสาร", "คุณบุญญนิตย์ วงศ์รักษ์มิตร"),
               AppStyle().space_box(10),
