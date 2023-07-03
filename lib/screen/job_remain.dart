@@ -1,73 +1,96 @@
+import 'package:edriver/api/job_api.dart';
+import 'package:edriver/screen/close_job_menu.dart';
 import 'package:edriver/theme/app_style.dart';
 import 'package:flutter/material.dart';
 
-class jobRemainScreen extends StatelessWidget {
+import '../api/api.dart';
+
+class jobRemainScreen extends StatefulWidget {
+  const jobRemainScreen({Key? key}) : super(key: key);
+
+  @override
+  State<jobRemainScreen> createState() => _jobRemainScreenState();
+}
+
+class _jobRemainScreenState extends State<jobRemainScreen> {
+  final ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: Job_api().job_remain(),
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            List? dt = snapshot.data;
+            if (dt!.length > 0) {
+              return SingleChildScrollView(
+                physics: ScrollPhysics(),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      tab_job(snapshot.data),
+                    ]),
+              );
+            } else {
+              return AppStyle().no_job("ไม่มีงานที่รอปิดงาน");
+            }
+          } else {
+            return AppStyle().no_job("ไม่มีงานที่รอปิดงาน");
+          }
+        });
+  }
+
+  Widget tab_job(dtJob) {
+    final count = dtJob.length;
+
     Size screenSize = MediaQuery.of(context).size;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(10),
-          color: Colors.pink[100],
-          child: Column(
-            children: [
-              AppStyle().space_box(10),
-              Text(
-                'อยู่ระหว่างดำเนินการ ',
-                style: TextStyle(fontSize: 18, color: Colors.red),
+    return ListView.builder(
+      controller: _controller,
+      shrinkWrap: true,
+      itemCount: count,
+      itemBuilder: (_, index) {
+        final row = dtJob[index];
+        return SizedBox(
+          width: screenSize.width - 10,
+          child: Card(
+            color: Colors.pink[100],
+            child: InkWell(
+              onTap: () {
+                AppStyle().link_to(
+                    closeJobMenuScreen(row["reserve_detail_jobID"],
+                        row["job_no"], row["commander_mobile"]),
+                    context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppStyle().space_box(10),
+                    AppStyle().row_detail("Job #", row["job_no"]),
+                    AppStyle().row_detail("วันที่",
+                        "${row["job_date"]} (${row["cnt_date"]} วัน)"),
+                    AppStyle().row_detail("จังหวัด",
+                        "${row["province_name"]} / ${row["amphur_name"]}"),
+                    AppStyle().row_detail("ทะเบียนรถ", row["full_plate_no"]),
+                    AppStyle()
+                        .row_detail("เลขทะเบียนภายใน", row["internal_no"]),
+                    AppStyle().row_detail("จุดหมาย", "${row["work_location"]}"),
+                    AppStyle()
+                        .row_detail("ผู้โดยสาร", row["commander_fullname"]),
+                    AppStyle().space_box(10),
+                    /*   btn(row["reserve_detail_jobID"], row["job_no"],
+                        row["commander_mobile"]),*/
+                    AppStyle().space_box(10),
+                  ],
+                ),
               ),
-              row_detail("Job #", "650121-0001-J001"),
-              row_detail("วันที่", " 22 - 25 ม.ค. 65 (4 วัน)"),
-              row_detail("เวลา", " 10:00 น.  สถานที่  ท.103"),
-              row_detail("จุดหมาย", " เขื่อนศรีฯ จ.กาญจนบุรี"),
-              row_detail("ผู้โดยสาร", "คุณบุญญนิตย์ วงศ์รักษ์มิตร"),
-              AppStyle().space_box(10),
-              btn(),
-              AppStyle().space_box(15),
-            ],
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
-  }
-
-  Widget row_detail(String left, String right) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(left, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(right, style: TextStyle(fontSize: 16))
-      ]),
-    );
-  }
-
-  Widget btn() {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          ElevatedButton.icon(
-            icon: Icon(
-              Icons.handshake,
-              color: Colors.white,
-              size: 24.0,
-            ),
-            label: Text(
-              " ดำเนินการ",
-              style: TextStyle(fontSize: 16.0, color: Colors.white),
-            ),
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28.0),
-              ),
-              primary: Colors.blue,
-              minimumSize: const Size(100, 40),
-            ),
-          )
-        ]));
   }
 }

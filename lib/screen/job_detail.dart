@@ -1,89 +1,118 @@
-import 'package:edriver/screen/cost_tab.dart';
-import 'package:edriver/screen/job_tab.dart';
-import 'package:edriver/screen/summary_tab.dart';
-import 'package:edriver/screen/time_tab.dart';
+import 'package:edriver/api/job_api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter/src/foundation/key.dart';
+import 'package:flutter/src/widgets/framework.dart';
+
 import '../api/api.dart';
-import 'package:edriver/theme/app_style.dart';
+import '../theme/app_style.dart';
 
 class jobDetailScreen extends StatefulWidget {
-  const jobDetailScreen({Key? key}) : super(key: key);
+  final String jobID;
+  final String job_no;
+  final String commander_tel;
+  const jobDetailScreen(this.jobID, this.job_no, this.commander_tel, {Key? key})
+      : super(key: key);
 
   @override
-  State<jobDetailScreen> createState() => _jobDetailScreen();
+  State<jobDetailScreen> createState() => _jobDetailScreenState();
 }
 
-class _jobDetailScreen extends State<jobDetailScreen> {
-  @override
+class _jobDetailScreenState extends State<jobDetailScreen> {
+  final ScrollController _controller = ScrollController();
+  late String jobID;
+
   Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: Job_api().get_job_detail(widget.jobID),
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            if (snapshot.data.toString() != "[]") {
+              jobID = widget.jobID;
+              return job_detail(snapshot.data);
+            } else {
+              return AppStyle().no_job("ไม่พบข้อมูล");
+            }
+          } else {
+            return AppStyle().open_loading();
+          }
+        });
+  }
+
+  Widget job_detail(dt_job) {
+    final row = dt_job[0];
+
+    Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: DefaultTabController(
-        // ใช้งาน DefaultTabController
-        length: 4, // กำหนดจำนวน tab
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              indicatorColor: Colors.white,
-              labelColor: Colors.white,
-              // ส่วนของ tab
-              tabs: [
-                Tab(icon: Icon(Icons.feed), text: 'ข้อมูลใบงาน'),
-                Tab(icon: Icon(Icons.alarm), text: 'บันทึกเวลา'),
-                Tab(icon: Icon(Icons.money_off_rounded), text: 'ค่าใช้จ่าย'),
-                Tab(icon: Icon(Icons.summarize), text: 'สรุปข้อมูล'),
-              ],
-            ),
-            title: Text('Job#  650121-0001-J001'),
-            actions: <Widget>[AppStyle().form_notify(context)],
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              jobTabScreen(),
-              timeTabScreen(),
-              costTabSceereen(),
-              summaryTabScreeen()
-            ],
+        appBar: AppBar(
+          title: Text("ข้อมูลใบงาน : " + widget.job_no.toString()),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+          child: ListView.builder(
+            controller: _controller,
+            shrinkWrap: true,
+            itemCount: 1,
+            itemBuilder: (_, index) {
+              final row = dt_job[index];
+              return SizedBox(
+                width: screenSize.width - 10,
+                child: Card(
+                  //  color: Colors.lightGreen[100],
+                  child: InkWell(
+                    //  onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppStyle().space_box(10),
+                          AppStyle().row_detail("Job #", row["job_no"], 16),
+                          AppStyle().row_detail(
+                              "ทะเบียนรถ", row["full_plate_no"], 16),
+                          AppStyle().row_detail(
+                              "เลขทะเบียนภายใน", row["internal_no"], 16),
+                          AppStyle().row_detail(
+                              "วันที่",
+                              "${row["job_date"]} (${row["cnt_date"]} วัน)",
+                              16),
+                          AppStyle().row_detail("เวลานัดหมาย",
+                              "${row["appointment_time"]} น.", 16),
+                          AppStyle().row_detail(
+                              "จุดนัดหมาย",
+                              "${row["appointment_name"]} / " +
+                                  AppStyle().convertNullToDash(
+                                      row["appointment_other"].toString()),
+                              16),
+                          AppStyle().row_detail(
+                              "จังหวัด",
+                              "${row["province_name"]} / ${row["amphur_name"]}",
+                              16),
+                          AppStyle().row_detail(
+                              "จุดหมาย", "${row["work_location"]}", 16),
+                          AppStyle().row_detail("ผู้ควบคุมรถ",
+                              "${row["commander_fullname"]}", 16),
+                          AppStyle().space_box(10),
+                          //   AppStyle().btn(context, row["commander_mobile"]),
+                          AppStyle().space_box(20),
+                          AppStyle()
+                              .text("แบบสำรวจความพึงพอใจ", 20, Colors.green),
+                          AppStyle().space_box(10),
+                          AppStyle().QR_code(
+                              "https://ecar.egat.co.th/Evaluation_satisfy_form/reserve_car/${row["enc_jobID"]}"),
+                          AppStyle().space_box(20),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
-      ),
-      bottomNavigationBar: AppStyle().butoom_bar(context, 2),
-    );
-  }
-
-  _callNumber(String phone_num) async {
-    // const number = '08592119XXXX'; //set the number here
-    bool? res = await FlutterPhoneDirectCaller.callNumber(phone_num);
-  }
-
-  Widget row_station(String staion_name, String phone_num) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(staion_name, style: TextStyle(fontSize: 20)),
-      btn_tel(phone_num)
-    ]);
-  }
-
-  Widget btn_tel(String phone_num) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            _callNumber(phone_num);
-          },
-          child: const Text(
-            "โทร.",
-            style: TextStyle(fontSize: 16.0, color: Colors.white),
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(28.0),
-            ),
-            primary: Colors.green,
-            minimumSize: const Size(80, 30),
-          ),
-        ),
-      ],
-    );
+        floatingActionButton: AppStyle()
+            .getBtnMenu(jobID, widget.job_no, widget.commander_tel, context),
+        bottomNavigationBar: AppStyle().butoom_bar(context, 2));
   }
 }

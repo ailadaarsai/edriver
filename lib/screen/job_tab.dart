@@ -1,49 +1,109 @@
-import 'package:edriver/screen/job_detail.dart';
-import 'package:edriver/theme/app_style.dart';
+import 'package:edriver/api/job_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:path/path.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
-class jobTabScreen extends StatelessWidget {
+import '../theme/app_style.dart';
+
+class jobTabScreen extends StatefulWidget {
+  final String jobID;
+  const jobTabScreen(this.jobID, {Key? key}) : super(key: key);
+
+  @override
+  State<jobTabScreen> createState() => _jobTabScreenState();
+}
+
+class _jobTabScreenState extends State<jobTabScreen> {
+  final ScrollController _controller = ScrollController();
   @override
   Widget build(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        Container(
-          margin: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              AppStyle().space_box(10),
-              row_detail("Job #", "650121-0001-J001"),
-              row_detail("วันที่", " 22 - 25 ม.ค. 65 (4 วัน)"),
-              row_detail("เวลา", " 10:00 น.  สถานที่  ท.103"),
-              row_detail("จุดหมาย", " เขื่อนศรีฯ จ.กาญจนบุรี"),
-              row_detail("ผู้ควบคุมรถ", "คุณบุญญนิตย์ วงศ์รักษ์มิตร"),
-              AppStyle().space_box(10),
-              btn(context),
-              AppStyle().space_box(15),
-            ],
-          ),
+    //AppStyle().toast_text(widget.jobID);
+    return FutureBuilder(
+        future: Job_api().get_job_detail(widget.jobID),
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            if (snapshot.data.toString() != "[]") {
+              return job_detail(snapshot.data);
+            } else {
+              return AppStyle().no_job("ไม่พบข้อมูล");
+            }
+          } else {
+            return AppStyle().open_loading();
+          }
+        });
+  }
+
+  Widget job_detail(dt_job) {
+    final row = dt_job[0];
+    if (row.length > 0) {
+      Size screenSize = MediaQuery.of(context).size;
+      return ListView.builder(
+        controller: _controller,
+        shrinkWrap: true,
+        itemCount: 1,
+        itemBuilder: (_, index) {
+          final row = dt_job[index];
+          return SizedBox(
+            width: screenSize.width - 10,
+            child: Card(
+              child: InkWell(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppStyle().space_box(10),
+                    AppStyle().row_detail("Job #", row["job_no"]),
+                    AppStyle().row_detail("ทะเบียนรถ", row["full_plate_no"]),
+                    AppStyle()
+                        .row_detail("เลขทะเบียนภายใน", row["internal_no"]),
+                    AppStyle().row_detail("วันที่",
+                        "${row["job_date"]} (${row["cnt_date"]} วัน)"),
+                    AppStyle().row_detail(
+                        "เวลานัดหมาย", "${row["appointment_time"]} น."),
+                    AppStyle().row_detail(
+                        "จุดนัดหมาย",
+                        "${row["appointment_name"]} / " +
+                            AppStyle().convertNullToDash(
+                                row["appointment_other"].toString())),
+                    AppStyle().row_detail("จังหวัด",
+                        "${row["province_name"]} / ${row["amphur_name"]}"),
+                    AppStyle().row_detail("จุดหมาย", "${row["work_location"]}"),
+                    AppStyle().row_detail(
+                        "ผู้ควบคุมรถ", "${row["commander_fullname"]}"),
+                    AppStyle().space_box(10),
+                    btn(context, row["commander_mobile"]),
+                    AppStyle().space_box(10),
+                    QR_code(row),
+                    AppStyle().space_box(20),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    } else {
+      return AppStyle().no_job("ไม่พบข้อมูล");
+    }
+  }
+
+  Widget QR_code(row) {
+    try {
+      final comm = row["commander_empID"];
+      return Column(children: [
+        AppStyle().text("แบบสำรวจความพึงพอใจ", 20, Colors.green),
+        QrImage(
+          data:
+              "https://ecar.egat.co.th/Evaluation_satisfy_form/reserve_car/${row["enc_jobID"]}/${row["enc_empID"]}",
+          version: QrVersions.auto,
+          size: 150.0,
         ),
-      ],
-    );
+      ]);
+    } catch (e) {
+      return Container();
+    }
   }
 
-  Widget row_detail(String left, String right) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Text(left, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        Text(right, style: TextStyle(fontSize: 16))
-      ]),
-    );
-  }
-
-  Widget btn(BuildContext context) {
+  Widget btn(BuildContext context, String phone_num) {
     return Padding(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -58,7 +118,7 @@ class jobTabScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16.0, color: Colors.white),
             ),
             onPressed: () {
-              _callNumber("0999999999");
+              _callNumber(phone_num);
             },
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(

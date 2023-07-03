@@ -1,4 +1,6 @@
 import 'package:edriver/api/api.dart';
+import 'package:edriver/api/driver_api.dart';
+import 'package:edriver/api/share_pref.dart';
 import 'package:edriver/screen/home.dart';
 import 'package:edriver/screen/login_egat.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -16,8 +18,8 @@ class _Login_company_screenState extends State<Login_company_screen> {
   final formKey = GlobalKey<FormState>();
 
   final idcard_controller = TextEditingController();
-  var _token;
-  @override
+  late String _token;
+
   initState() {
     super.initState();
     setState(() {
@@ -33,15 +35,14 @@ class _Login_company_screenState extends State<Login_company_screen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: API().read_data("driverID"),
+        future: Share_pref().read_data("driverID"),
         builder: (context, snapshot) {
-          //  AppStyle().toast_text("build ===>" + snapshot.data.toString());
           if (snapshot.data.toString() != "null") {
             return const HomeScreen();
           } else {
             return form_login_rent(context);
           }
-          // return CircularProgressIndicator();R
+          return AppStyle().open_loading();
         });
   }
 
@@ -50,34 +51,37 @@ class _Login_company_screenState extends State<Login_company_screen> {
         backgroundColor: Colors.green[100],
         body: Container(
           child: Padding(
-              padding: const EdgeInsets.all(25.0),
+              padding: const EdgeInsets.all(20.0),
               child: Form(
                   key: formKey,
                   child: SingleChildScrollView(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    //  crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
                     children: [
-                      AppStyle().space_box(80),
+                      AppStyle().space_box(40),
                       AppStyle().logo(),
                       AppStyle().space_box(10),
-                      Center(child: AppStyle().text("เข้าสู่ระบบ", 30)),
+                      Center(
+                          child:
+                              AppStyle().text("เข้าสู่ระบบ", 30, Colors.black)),
                       AppStyle().space_box(10),
-                      SizedBox(
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                            Center(
-                              child: btn_egat(context),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: btn_company(context),
-                            ),
-                          ])),
+                      Center(
+                        child: SizedBox(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                //crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                              btn_egat(context),
+                              btn_company(context),
+                            ])),
+                      ),
                       AppStyle().space_box(15),
-                      AppStyle().text("รหัสบัตรประชาชน 13 หลัก", 20),
+                      AppStyle()
+                          .text("รหัสบัตรประชาชน 13 หลัก", 20, Colors.black),
                       TextFormField(
                           maxLength: 13,
                           controller: idcard_controller,
@@ -103,18 +107,18 @@ class _Login_company_screenState extends State<Login_company_screen> {
                             try {
                               //AppStyle().toast_text(_token);
                               if (formKey.currentState!.validate()) {
-                                final _driverID = await API()
+                                final _driverID = await driver_api()
                                     .saveUserProfileMem(
                                         'drv_r',
                                         idcard_controller.text,
                                         _token.toString());
                                 //AppStyle().toast_text(_driverID.toString());
                                 if (_driverID.toString() != "null") {
-                                  //AppStyle().toast_text("navigat");
+                                  Navigator.of(context)
+                                      .popUntil((route) => route.isFirst);
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          HomeScreen(driverID: _driverID),
+                                      builder: (context) => HomeScreen(),
                                     ),
                                   );
                                 }
@@ -132,27 +136,28 @@ class _Login_company_screenState extends State<Login_company_screen> {
 }
 
 Widget btn_company(context) {
-  return ElevatedButton(
-    onPressed: () {
-      //next_function();
-    },
-    child: const Text(
-      "พขร.บริษัท",
-      style: TextStyle(fontSize: 16.0, color: Colors.black),
-    ),
-    style: ElevatedButton.styleFrom(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28.0),
-      ),
-      primary: Colors.amber,
-      minimumSize: const Size(150, 50),
-    ),
-  );
+  return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: ElevatedButton(
+        onPressed: () {
+          //next_function();
+        },
+        child: const Text(
+          "พขร.บริษัท",
+          style: TextStyle(fontSize: 16.0, color: Colors.black),
+        ),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28.0),
+          ),
+          primary: Colors.amber,
+          minimumSize: const Size(150, 50),
+        ),
+      ));
 }
 
 Widget btn_egat(context) {
   return Container(
-    margin: const EdgeInsets.only(left: 20),
     child: OutlinedButton(
       onPressed: () {
         Navigator.popAndPushNamed(context, "/Login_egat_screen");
@@ -167,8 +172,8 @@ Widget btn_egat(context) {
           borderRadius: BorderRadius.circular(28.0),
         ),
         primary: Colors.amber,
-        minimumSize: const Size(150, 50),
         backgroundColor: Colors.amber[50],
+        minimumSize: const Size(150, 50),
       ),
     ),
   );

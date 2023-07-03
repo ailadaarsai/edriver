@@ -1,6 +1,5 @@
+import 'package:edriver/api/share_pref.dart';
 import 'package:flutter/material.dart';
-
-import '../api/api.dart';
 import '../theme/app_style.dart';
 
 class FuelScreen extends StatefulWidget {
@@ -14,7 +13,7 @@ class _FuelScreenState extends State<FuelScreen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: API().read_data("driver_name"),
+      future: Share_pref().read_data("driver_name"),
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
@@ -23,24 +22,21 @@ class _FuelScreenState extends State<FuelScreen> {
               AppStyle().form_notify(context),
             ],
           ),
-          body: Center(
-            child: Column(
-              children: [
-                AppStyle().space_box(50),
-                Text(
-                  'บันทึกข้อมูลการเติมน้ำมัน ',
-                  style: TextStyle(fontSize: 24),
-                ),
-                Text(
-                  'อยู่ระหว่างดำเนินการ ',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
-                ),
-              ],
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
+                children: [
+                  AppStyle().space_box(50),
+                  AppStyle()
+                      .text("บันทึกข้อมูลการเติมน้ำมัน", 24, Colors.green),
+                  AppStyle().phase_2(),
+                ],
+              ),
             ),
           ),
           bottomNavigationBar: AppStyle().butoom_bar(context, 3),
         );
-        return const CircularProgressIndicator(); // or some other widget
+        return AppStyle().open_loading(); // or some other widget
       },
     );
   }

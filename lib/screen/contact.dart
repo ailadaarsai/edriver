@@ -1,7 +1,5 @@
+import 'package:edriver/api/share_pref.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-
-import '../api/api.dart';
 import 'package:edriver/theme/app_style.dart';
 
 class ContactScreeen extends StatefulWidget {
@@ -15,7 +13,7 @@ class _ContactScreeenState extends State<ContactScreeen> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: API().read_data("driver_name"),
+      future: Share_pref().read_data("driver_name"),
       builder: (context, snapshot) {
         return Scaffold(
           appBar: AppBar(
@@ -24,43 +22,40 @@ class _ContactScreeenState extends State<ContactScreeen> {
               AppStyle().form_notify(context),
             ],
           ),
-          body: Container(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text("สถานีจัดรถ",
-                      style: TextStyle(fontSize: 24, color: Colors.green)),
-                  Divider(color: Colors.green, height: 15),
-                  AppStyle().space_box(15),
-                  row_station("สถานีรถเก๋ง", "024360586"),
-                  row_station("สถานีรถตู้", "024360586"),
-                  row_station("สถานีรถบัส", "024360586"),
-                  AppStyle().space_box(30),
-                  Text("ธุรการ",
-                      style: TextStyle(fontSize: 24, color: Colors.green)),
-                  Divider(color: Colors.green, height: 20),
-                  AppStyle().space_box(15),
-                  row_station("สถานีรถเก๋ง", "024360586"),
-                  row_station("สถานีรถตู้", "024360586"),
-                  row_station("สถานีรถบัส", "024360586"),
-                ],
+          body: SingleChildScrollView(
+            child: Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text("สถานีจัดรถ",
+                        style: TextStyle(fontSize: 24, color: Colors.green)),
+                    Divider(color: Colors.green, height: 15),
+                    AppStyle().space_box(15),
+                    row_station("สถานีรถเก๋ง", "024365222"),
+                    row_station("สถานีรถตู้", "024360578"),
+                    row_station("สถานีรถบัส", "024365243"),
+                    AppStyle().space_box(30),
+                    Text("ธุรการ",
+                        style: TextStyle(fontSize: 24, color: Colors.green)),
+                    Divider(color: Colors.green, height: 20),
+                    AppStyle().space_box(15),
+                    row_station("สถานีรถเก๋ง", "024360574"),
+                    row_station("สถานีรถตู้", "024365226"),
+                    row_station("สถานีรถบัส", "024365226"),
+                  ],
+                ),
               ),
             ),
           ),
-          bottomNavigationBar: AppStyle().butoom_bar(context, 4),
+          bottomNavigationBar: AppStyle().butoom_bar(context, 3),
         );
 
-        return const CircularProgressIndicator(); // or some other widget
+        return AppStyle().open_loading(); // or some other widget
       },
     );
-  }
-
-  _callNumber(String phone_num) async {
-    // const number = '08592119XXXX'; //set the number here
-    bool? res = await FlutterPhoneDirectCaller.callNumber(phone_num);
   }
 
   Widget row_station(String staion_name, String phone_num) {
@@ -76,7 +71,7 @@ class _ContactScreeenState extends State<ContactScreeen> {
       children: [
         ElevatedButton(
           onPressed: () {
-            _callNumber(phone_num);
+            AppStyle().callNumber(phone_num);
           },
           child: const Text(
             "โทร.",
@@ -92,6 +87,5 @@ class _ContactScreeenState extends State<ContactScreeen> {
         ),
       ],
     );
-    
   }
 }
