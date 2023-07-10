@@ -26,8 +26,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     NeatCleanCalendarEvent('Event A',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 10, 0),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 12, 0),
+        /*  endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 12, 0),*/
         description: 'A special event',
         color: Colors.blue[700]),
   ];
@@ -37,31 +37,31 @@ class _CalendarScreenState extends State<CalendarScreen> {
         description: 'test desc',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 10, 0),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day + 2, 12, 0),
+        /* endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day + 2, 12, 0),*/
         color: Colors.orange,
         isMultiDay: true),
     NeatCleanCalendarEvent('Allday Event B',
         description: 'test desc',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day - 2, 14, 30),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day + 2, 17, 0),
+        /*   endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day + 2, 17, 0),*/
         color: Colors.pink,
         isAllDay: true),
     NeatCleanCalendarEvent('Normal Event D',
         description: 'test desc',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 14, 30),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 17, 0),
+        /*endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 17, 0),*/
         color: Colors.indigo),
     NeatCleanCalendarEvent('Normal Event E',
         description: 'test desc',
         startTime: DateTime(DateTime.now().year, DateTime.now().month,
             DateTime.now().day, 7, 45),
-        endTime: DateTime(DateTime.now().year, DateTime.now().month,
-            DateTime.now().day, 9, 0),
+        /* endTime: DateTime(DateTime.now().year, DateTime.now().month,
+            DateTime.now().day, 9, 0),*/
         color: Colors.indigo),
   ];
 

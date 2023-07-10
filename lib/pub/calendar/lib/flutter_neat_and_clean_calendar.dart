@@ -437,8 +437,9 @@ class _CalendarState extends State<Calendar> {
                       Center(
                         child: CircularProgressIndicator(),
                       );
-                      /*Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) =>  jobDetailScreen(jobID, job_no, mobile)));*/
+                      /*  Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              jobDetailScreen(jobID, job_no, mobile)));*/
                     },
                     child: Container(
                       height: 90.0,
