@@ -8,9 +8,6 @@ import './neat_and_clean_calendar_event.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import '../../../screen/job_detail.dart';
-import '../../../theme/app_style.dart';
-
 // Export NeatCleanCalendarEvent for using it in the application
 export './neat_and_clean_calendar_event.dart';
 
@@ -437,9 +434,11 @@ class _CalendarState extends State<Calendar> {
 
                   return GestureDetector(
                     onTap: () {
-                      AppStyle().open_loading();
-                      AppStyle().link_to(
-                          jobDetailScreen(jobID, job_no, mobile), context);
+                      Center(
+                        child: CircularProgressIndicator(),
+                      );
+                      /*Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) =>  jobDetailScreen(jobID, job_no, mobile)));*/
                     },
                     child: Container(
                       height: 90.0,
