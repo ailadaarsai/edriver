@@ -7,11 +7,9 @@ import './calendar_tile.dart';
 import './neat_and_clean_calendar_event.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
 import '../../../screen/job_detail.dart';
 import '../../../theme/app_style.dart';
-
-//import 'package:edriver/screen/job_detail.dart';
-//import 'package:edriver/theme/app_style.dart';
 
 // Export NeatCleanCalendarEvent for using it in the application
 export './neat_and_clean_calendar_event.dart';
