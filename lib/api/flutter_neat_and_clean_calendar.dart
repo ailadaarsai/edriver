@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_neat_and_clean_calendar/date_picker_config.dart';
+import 'date_picker_config.dart';
 
-import './date_utils.dart';
-import './simple_gesture_detector.dart';
-import './calendar_tile.dart';
-import './neat_and_clean_calendar_event.dart';
+import 'date_utils.dart';
+import 'simple_gesture_detector.dart';
+import 'calendar_tile.dart';
+import 'neat_and_clean_calendar_event.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import '../screen/job_detail.dart';
 
 // Export NeatCleanCalendarEvent for using it in the application
 export './neat_and_clean_calendar_event.dart';
@@ -437,9 +438,9 @@ class _CalendarState extends State<Calendar> {
                       Center(
                         child: CircularProgressIndicator(),
                       );
-                      /*  Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              jobDetailScreen(jobID, job_no, mobile)));*/
+                              jobDetailScreen(jobID, job_no, mobile)));
                     },
                     child: Container(
                       height: 90.0,

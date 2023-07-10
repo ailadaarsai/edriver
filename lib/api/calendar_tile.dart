@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './date_utils.dart';
-import './neat_and_clean_calendar_event.dart';
+import 'date_utils.dart';
+import 'neat_and_clean_calendar_event.dart';
 import "package:intl/intl.dart";
 
 /// [CalendarTile] is responsible for displaying one calendar event entry below
