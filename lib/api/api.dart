@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../theme/app_style.dart';
 
 class API {
-  // urlPrefix = "https://ecar.egat.co.th/driver_api";
+  String urlPrefix = "https://ecar.egat.co.th/driver_api";
   //String urlPrefix = "http://10.0.2.2/ecar/driver_api";
-  String urlPrefix = "https://ecar.egat.co.th/ecar_ice/driver_api";
+  //String urlPrefix = "https://ecar.egat.co.th/ecar_ice/driver_api";
 
   final prefs = SharedPreferences.getInstance();
 
