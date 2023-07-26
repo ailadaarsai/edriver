@@ -80,7 +80,6 @@ class _costTollwayState extends State<costTollway> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return AppStyle().open_loading();
           } else {
-            // print(snapshot.data);
             getTolway(snapshot.data);
             return sc_tollway();
           }
@@ -88,7 +87,7 @@ class _costTollwayState extends State<costTollway> {
   }
 
   getTolway(data) {
-    if (data != null) {
+    if (widget.costTypeID != "") {
       _is_edit = true;
       _price = data["price"];
       _receipt_num = data["receipt_num"];
